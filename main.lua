@@ -5,6 +5,7 @@ declare('GuildInfo', GuildInfo or {})
 
 GuildInfo.version = 0.1
 
+dofile('tcpsock.lua')
 dofile('http.lua')
 
 local color = '\127FFFFFF'
