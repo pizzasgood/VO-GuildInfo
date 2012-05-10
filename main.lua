@@ -25,6 +25,7 @@ function GuildInfo:process_page()
 		self.guilds[tag].tag = tag
 		self.guilds[tag].num_members = num_members
 	end
+	print("finished")
 end
 
 function GuildInfo:update_links()
