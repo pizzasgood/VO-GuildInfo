@@ -16,8 +16,13 @@ GuildInfo.main_url = 'http://www.vendetta-online.com'
 GuildInfo.guildinfo_url = GuildInfo.main_url .. '/x/guildinfo/'
 GuildInfo.charinfo_url = GuildInfo.main_url .. '/x/stats/'
 GuildInfo.guilds = {}
+GuildInfo.processing = {}
 
 function GuildInfo:update_links()
+	if table.getn2(self.processing) > 0 then
+		print("GuildInfo is already processing, please wait for it to finish.")
+		return
+	end
 	print("Fetching main page...")
 	self.main_page = nil
 	HTTP.urlopen(self.guildinfo_url, 'POST', function(success, header, page) 
@@ -49,10 +54,12 @@ end
 function GuildInfo:process_results(force)
 	if self.guilds == nil then return end
 	print("processing results")
+	self.processing = {}
 	for i,guild in pairs(self.guilds) do
 		if self.guilds[i].members == nil then self.guilds[i].members = {} end
 		if force or self.guilds[i].num_members ~= table.getn2(self.guilds[i].members) then
 			print(self.guilds[i].tag .. ": " .. self.guilds[i].num_members .. " != " .. table.getn2(self.guilds[i].members))
+			self.processing[i] = true
 			self:process_guild(i)
 		else
 			print(self.guilds[i].tag .. " is fine")
@@ -72,6 +79,7 @@ function GuildInfo:process_guild(index)
 				print(success)
 				if header ~= nil then print(header.status) end
 			end
+			GuildInfo.processing[index] = nil
 		end, {})
 end
 
