@@ -16,6 +16,7 @@ GuildInfo.main_url = 'http://www.vendetta-online.com'
 GuildInfo.guildinfo_url = GuildInfo.main_url .. '/x/guildinfo/'
 GuildInfo.charinfo_url = GuildInfo.main_url .. '/x/stats/'
 GuildInfo.guilds = {}
+GuildInfo.players = {}
 GuildInfo.processing = {}
 
 function GuildInfo:update_links()
@@ -93,6 +94,7 @@ function GuildInfo:process_sub_page(index, page)
 		self.guilds[index].members[name].id = id
 		self.guilds[index].members[name].nation = nation
 		self.guilds[index].members[name].rank = rank
+		self.players[name] = index
 	end
 	--print("finished processing sub page")
 end
