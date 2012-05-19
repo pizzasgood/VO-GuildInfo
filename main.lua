@@ -59,11 +59,11 @@ function GuildInfo:process_results(force)
 	for i,guild in pairs(self.guilds) do
 		if self.guilds[i].members == nil then self.guilds[i].members = {} end
 		if force or self.guilds[i].num_members ~= table.getn2(self.guilds[i].members) then
-			print(self.guilds[i].tag .. ": " .. self.guilds[i].num_members .. " != " .. table.getn2(self.guilds[i].members))
+			--print(self.guilds[i].tag .. ": " .. self.guilds[i].num_members .. " != " .. table.getn2(self.guilds[i].members))
 			self.processing[i] = true
 			self:process_guild(i)
 		else
-			print(self.guilds[i].tag .. " is fine")
+			--print(self.guilds[i].tag .. " is fine")
 		end
 	end
 	print("finished processing results")
