@@ -100,9 +100,104 @@ function GuildInfo:process_sub_page(index, page)
 end
 
 
+function GuildInfo:get_commander(tag)
+	for i,m in self.guilds[tag].members do
+		if m.rank == "Commander" then
+			return(m.name)
+		end
+	end
+end
+
+
+function GuildInfo:get_officers(tag)
+	local officers = {}
+	for i,m in pairs(self.guilds[tag].members) do
+		if m.rank == "Lieutenant" or m.rank == "Council and Lieutenant" then
+			officers[m.name] = m.rank
+		end
+	end
+	return officers
+end
+
+
+function GuildInfo:get_council(tag)
+	local council = {}
+	for i,m in pairs(self.guilds[tag].members) do
+		if m.rank == "Council" or m.rank == "Council and Lieutenant" then
+			council[m.name] = m.rank
+		end
+	end
+	return council
+end
+
+
+function GuildInfo:get_important(tag)
+	local people = {}
+	for i,m in pairs(self.guilds[tag].members) do
+		if m.rank ~= "Member" then
+			people[m.name] = m.rank
+		end
+	end
+	return people
+end
+
+
+function GuildInfo:short_guild_info(tag)
+	if self.guilds[tag] == nil then
+		print("Unknown guild "..tag)
+		return
+	end
+
+	local people = self:get_important(tag)
+	local name = self.guilds[tag].name
+	local size = self.guilds[tag].num_members
+
+	print("["..tag.."] "..name)
+	print("Total members: "..size)
+	if people then
+		for m,r in pairs(people) do
+			if r == "Commander" then
+				print(r..": "..m)
+				break
+			end
+		end
+		for m,r in pairs(people) do
+			if r == "Lieutenant" or r == "Council and Lieutenant" then
+				print(r..": "..m)
+			end
+		end
+		for m,r in pairs(people) do
+			if r == "Council" then
+				print(r..": "..m)
+			end
+		end
+	end
+end
+
+
+function GuildInfo:long_guild_info(tag)
+	if self.guilds[tag] == nil then
+		print("Unknown guild "..tag)
+		return
+	end
+
+	self:short_guild_info(tag)
+
+	for i,m in pairs(self.guilds[tag].members) do
+		if m.rank == "Member" then
+			print(m.rank..": "..m.name)
+		end
+	end
+end
+
+
 function GuildInfo.proc(_,data)
 	if (data == nil) then
 		GuildInfo:update_links()
+	elseif (#data > 1 and data[1] == "g") then
+		GuildInfo:short_guild_info(data[2])
+	elseif (#data > 1 and data[1] == "gg") then
+		GuildInfo:long_guild_info(data[2])
 	else
 		print(titlecolor.."GuildInfo"..'\127o'..color.." "..string.format("%0.1f",GuildInfo.version)..'\127o')
 		print(color.." Pulls information about guilds from the website."..'\127o')
