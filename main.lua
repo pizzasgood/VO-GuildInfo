@@ -195,9 +195,9 @@ function GuildInfo.proc(_,data)
 	if (data == nil) then
 		GuildInfo:update_links()
 	elseif (#data > 1 and data[1] == "g") then
-		GuildInfo:short_guild_info(data[2])
+		GuildInfo:short_guild_info(string.upper(data[2]))
 	elseif (#data > 1 and data[1] == "gg") then
-		GuildInfo:long_guild_info(data[2])
+		GuildInfo:long_guild_info(string.upper(data[2]))
 	else
 		print(titlecolor.."GuildInfo"..'\127o'..color.." "..string.format("%0.1f",GuildInfo.version)..'\127o')
 		print(color.." Pulls information about guilds from the website."..'\127o')
