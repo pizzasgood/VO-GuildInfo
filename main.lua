@@ -87,7 +87,7 @@ end
 function GuildInfo:process_sub_page(index, page)
 	if page == nil then return end
 	--print("processing sub page for "..index)
-	for id, nation, name, rank in page:gmatch("/x/stats/(%d+).-class=['\"]?(.-)['\"]?>(.-)</font></a>.-(%a+)</td></tr>") do
+	for id, nation, name, rank in page:gmatch("/x/stats/(%d+).-class=['\"]?(.-)['\"]?>(.-)</font></a>.-([%a ]+)</td></tr>") do
 		if self.guilds[index].members == nil then self.guilds[index].members = {} end
 		self.guilds[index].members[name] = {}
 		self.guilds[index].members[name].name = name
