@@ -142,6 +142,13 @@ function GuildInfo:get_important(tag)
 end
 
 
+function GuildInfo:list_guilds()
+	for i,g in pairs(self.guilds) do
+		print("["..g.tag.."] "..g.name)
+	end
+end
+
+
 function GuildInfo:short_guild_info(tag)
 	if self.guilds[tag] == nil then
 		print("Unknown guild "..tag)
@@ -194,6 +201,8 @@ end
 function GuildInfo.proc(_,data)
 	if (data == nil) then
 		GuildInfo:update_links()
+	elseif (data[1] == "l") then
+		GuildInfo:list_guilds()
 	elseif (#data > 1 and data[1] == "g") then
 		GuildInfo:short_guild_info(string.upper(data[2]))
 	elseif (#data > 1 and data[1] == "gg") then
