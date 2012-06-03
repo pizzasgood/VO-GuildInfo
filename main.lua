@@ -286,7 +286,12 @@ function GuildInfo.proc(_,data)
 		GuildInfo:long_player_info(data[2])
 	else
 		print(titlecolor .. "GuildInfo" .. '\127o' .. color .. " " .. string.format("%0.1f",GuildInfo.version) .. '\127o')
-		print(subcolor .. " Pulls information about guilds from the website." .. '\127o')
+		print(subcolor .. "Pulls information about guilds from the website." .. '\127o')
+		print(color .. "/guildinfo          " .. '\127o' .. subcolor .. "\tupdates database" .. '\127o')
+		print(color .. "/guildinfo l        " .. '\127o' .. subcolor .. "\tlist guilds" .. '\127o')
+		print(color .. "/guildinfo p <name> " .. '\127o' .. subcolor .. "\tplayer info" .. '\127o')
+		print(color .. "/guildinfo g <tag>  " .. '\127o' .. subcolor .. "\tguild info" .. '\127o')
+		print(color .. "/guildinfo gg <tag> " .. '\127o' .. subcolor .. "\tfull guild info" .. '\127o')
 	end
 end
 
