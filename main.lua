@@ -229,18 +229,19 @@ end
 
 
 function GuildInfo:get_player(name)
+	if name == nil or self.players[name] == nil then return end
 	return self.guilds[self.players[name]].members[name]
 end
 
 
 function GuildInfo:get_colored_name_with_tag(player)
-	if player == nil then return end
+	if player == nil then return '' end
 	if player.name == nil then player = self:get_player(player) end
 	return(self:get_color(player.nation) .. "[" .. self.players[player.name] .. "] " .. player.name .. '\127o')
 end
 
 function GuildInfo:get_colored_name(player)
-	if player == nil then return end
+	if player == nil then return '' end
 	if player.name == nil then player = self:get_player(player) end
 	return(self:get_color(player.nation) .. player.name .. '\127o')
 end
