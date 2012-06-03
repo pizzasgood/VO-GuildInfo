@@ -101,7 +101,7 @@ function GuildInfo:process_sub_page(index, page)
 		self.guilds[index].members[name].id = id
 		self.guilds[index].members[name].nation = nation
 		self.guilds[index].members[name].rank = rank
-		self.players[name] = index
+		--self.players[name] = index
 	end
 	--print("finished processing sub page")
 end
@@ -152,6 +152,16 @@ end
 function GuildInfo:list_guilds()
 	for i,g in pairs(self.guilds) do
 		print("["..g.tag.."] "..g.name)
+	end
+end
+
+
+function GuildInfo:update_players()
+	self.players = {}
+	for gi,g in pairs(self.guilds) do
+		for mi,m in pairs(g.members) do
+			self.players[m.name] = g.tag
+		end
 	end
 end
 
