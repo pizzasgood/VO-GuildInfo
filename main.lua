@@ -43,27 +43,24 @@ end
 
 function GuildInfo:update_links()
 	self.busy = true
-	print("Fetching main page...")
+	print("Updating guild info...")
 	self.main_page = nil
 	HTTP.urlopen(self.guildinfo_url, 'POST', function(success, header, page) 
 			if success ~= nil and header.status == 200 then
-				print("Success")
 				GuildInfo.main_page = page
 				GuildInfo:process_main_page()
 				GuildInfo:process_results()
-			else
-				print("Failed")
-				print(success)
-				if header ~= nil then print(header.status) end
 			end
 			self.busy = false
-			self:run_when_ready(function() self:update_players() end)
+			self:run_when_ready(function()
+				self:update_players()
+				print("Finished")
+			end)
 		end, {})
 end
 
 function GuildInfo:process_main_page()
 	if self.main_page == nil then return end
-	print("processing main page")
 	for id, name, tag, num_members in self.main_page:gmatch("/x//guildinfo/(%d+).->(.-)</a>[^[]*%[(.-)%]</td>.-<td>(%d+)</td>") do
 		if self.guilds[tag] == nil then self.guilds[tag] = {} end
 		self.guilds[tag].id = id
@@ -71,35 +68,23 @@ function GuildInfo:process_main_page()
 		self.guilds[tag].tag = tag
 		self.guilds[tag].num_members = tonumber(num_members)
 	end
-	print("finished processing main page")
 end
 function GuildInfo:process_results(force)
 	if self.guilds == nil then return end
-	print("processing results")
 	self.processing = {}
 	for i,guild in pairs(self.guilds) do
 		if self.guilds[i].members == nil then self.guilds[i].members = {} end
 		if force or self.guilds[i].num_members ~= table.getn2(self.guilds[i].members) then
-			--print(self.guilds[i].tag .. ": " .. self.guilds[i].num_members .. " != " .. table.getn2(self.guilds[i].members))
 			self.processing[i] = true
 			self:process_guild(i)
-		else
-			--print(self.guilds[i].tag .. " is fine")
 		end
 	end
-	print("finished processing results")
 end
 
 function GuildInfo:process_guild(index)
-	print("Fetching page for "..self.guilds[index].tag)
 	HTTP.urlopen(self.guildinfo_url .. self.guilds[index].id, 'POST', function(success, header, page) 
 			if success ~= nil and header ~= nil and header.status == 200 then
-				--print("Success")
 				GuildInfo:process_sub_page(index, page)
-			else
-				print("Failed")
-				print(success)
-				if header ~= nil then print(header.status) end
 			end
 			GuildInfo.processing[index] = nil
 		end, {})
@@ -107,7 +92,6 @@ end
 
 function GuildInfo:process_sub_page(index, page)
 	if page == nil then return end
-	--print("processing sub page for "..index)
 	for id, nation, name, rank in page:gmatch("/x/stats/(%d+).-class=['\"]?(.-)['\"]?>(.-)</font></a>.-([%a ]+)</td></tr>") do
 		if self.guilds[index].members == nil then self.guilds[index].members = {} end
 		self.guilds[index].members[name] = {}
@@ -115,9 +99,7 @@ function GuildInfo:process_sub_page(index, page)
 		self.guilds[index].members[name].id = id
 		self.guilds[index].members[name].nation = nation
 		self.guilds[index].members[name].rank = rank
-		--self.players[name] = index
 	end
-	--print("finished processing sub page")
 end
 
 
@@ -171,14 +153,12 @@ end
 
 
 function GuildInfo:update_players()
-	print("updating players")
 	self.players = {}
 	for gi,g in pairs(self.guilds) do
 		for mi,m in pairs(g.members) do
 			self.players[m.name] = g.tag
 		end
 	end
-	print("Finished.")
 end
 
 
