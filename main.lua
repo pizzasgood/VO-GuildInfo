@@ -26,7 +26,7 @@ end
 
 function GuildInfo:ready_check()
 	if self:is_active() then
-		print("Error:  GuildInfo is still processing, please wait for it to finish.")
+		print(color .. "Error:  GuildInfo is still processing, please wait for it to finish." .. '\127o')
 		return false
 	else
 		return true
@@ -43,7 +43,7 @@ end
 
 function GuildInfo:update_links()
 	self.busy = true
-	print("Updating guild info...")
+	print(color .. "Updating guild info..." .. '\127o')
 	self.main_page = nil
 	HTTP.urlopen(self.guildinfo_url, 'POST', function(success, header, page) 
 			if success ~= nil and header.status == 200 then
@@ -54,7 +54,7 @@ function GuildInfo:update_links()
 			self.busy = false
 			self:run_when_ready(function()
 				self:update_players()
-				print("Finished")
+				print(color .. "Finished" .. '\127o')
 			end)
 		end, {})
 end
@@ -147,7 +147,7 @@ end
 
 function GuildInfo:list_guilds()
 	for i,g in pairs(self.guilds) do
-		print("["..g.tag.."] "..g.name)
+		print(color .. "[" .. g.tag .. "] " .. g.name .. '\127o')
 	end
 end
 
@@ -164,7 +164,7 @@ end
 
 function GuildInfo:short_guild_info(tag)
 	if self.guilds[tag] == nil then
-		print("Unknown guild "..tag)
+		print(color .. "Unknown guild " .. tag .. '\127o')
 		return
 	end
 
@@ -172,23 +172,23 @@ function GuildInfo:short_guild_info(tag)
 	local name = self.guilds[tag].name
 	local size = self.guilds[tag].num_members
 
-	print("["..tag.."] "..name)
-	print("Total members: "..size)
+	print(color .. "[" .. tag .. "] " .. name .. '\127o')
+	print(color .. "Total members: " .. size .. '\127o')
 	if people then
 		for m,r in pairs(people) do
 			if r == "Commander" then
-				print(r..": "..self:get_colored_name(m))
+				print(color .. r .. ": " .. '\127o' .. self:get_colored_name(m))
 				break
 			end
 		end
 		for m,r in pairs(people) do
 			if r == "Lieutenant" or r == "Council and Lieutenant" then
-				print(r..": "..self:get_colored_name(m))
+				print(color .. r .. ": " .. '\127o' .. self:get_colored_name(m))
 			end
 		end
 		for m,r in pairs(people) do
 			if r == "Council" then
-				print(r..": "..self:get_colored_name(m))
+				print(color .. r .. ": " .. '\127o' .. self:get_colored_name(m))
 			end
 		end
 	end
@@ -197,7 +197,7 @@ end
 
 function GuildInfo:long_guild_info(tag)
 	if self.guilds[tag] == nil then
-		print("Unknown guild "..tag)
+		print(color .. "Unknown guild " .. tag .. '\127o')
 		return
 	end
 
@@ -205,7 +205,7 @@ function GuildInfo:long_guild_info(tag)
 
 	for i,m in pairs(self.guilds[tag].members) do
 		if m.rank == "Member" then
-			print(m.rank..": "..self:get_colored_name(m))
+			print(color .. m.rank .. ": " .. '\127o' .. self:get_colored_name(m))
 		end
 	end
 end
@@ -213,17 +213,17 @@ end
 
 function GuildInfo:short_player_info(name)
 	if self.players[name] == nil then
-		print("Unknown player "..name)
+		print(color .. "Unknown player " .. name .. '\127o')
 		return
 	end
 
 	local player = self:get_player(name)
-	print("("..player.rank..") "..self:get_colored_name_with_tag(player))
+	print(color .. "(" .. player.rank .. ") " .. '\127o' .. self:get_colored_name_with_tag(player))
 end
 
 
 function GuildInfo:long_player_info(name)
-	print("This is not implemented, falling back to short_player_info")
+	print(color .. "This is not implemented, falling back to short_player_info" .. '\127o')
 	self:short_player_info(name)
 end
 
@@ -285,8 +285,8 @@ function GuildInfo.proc(_,data)
 		if not GuildInfo:ready_check() then return end
 		GuildInfo:long_player_info(data[2])
 	else
-		print(titlecolor.."GuildInfo"..'\127o'..color.." "..string.format("%0.1f",GuildInfo.version)..'\127o')
-		print(color.." Pulls information about guilds from the website."..'\127o')
+		print(titlecolor .. "GuildInfo" .. '\127o' .. color .. " " .. string.format("%0.1f",GuildInfo.version) .. '\127o')
+		print(color .. " Pulls information about guilds from the website." .. '\127o')
 	end
 end
 
