@@ -57,6 +57,7 @@ function GuildInfo:update_links()
 				if header ~= nil then print(header.status) end
 			end
 			self.busy = false
+			self:run_when_ready(function() self:update_players() end)
 		end, {})
 end
 
@@ -92,7 +93,7 @@ end
 function GuildInfo:process_guild(index)
 	print("Fetching page for "..self.guilds[index].tag)
 	HTTP.urlopen(self.guildinfo_url .. self.guilds[index].id, 'POST', function(success, header, page) 
-			if success ~= nil and header.status == 200 then
+			if success ~= nil and header ~= nil and header.status == 200 then
 				--print("Success")
 				GuildInfo:process_sub_page(index, page)
 			else
@@ -170,12 +171,14 @@ end
 
 
 function GuildInfo:update_players()
+	print("updating players")
 	self.players = {}
 	for gi,g in pairs(self.guilds) do
 		for mi,m in pairs(g.members) do
 			self.players[m.name] = g.tag
 		end
 	end
+	print("Finished.")
 end
 
 
