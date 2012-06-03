@@ -217,7 +217,7 @@ function GuildInfo:short_player_info(name)
 		return
 	end
 
-	local player = self.guilds[self.players[name]].members[name]
+	local player = self:get_player(name)
 	print("("..player.rank..") "..self:get_colored_name_with_tag(player))
 end
 
@@ -227,24 +227,22 @@ function GuildInfo:long_player_info(name)
 	self:short_player_info(name)
 end
 
+
+function GuildInfo:get_player(name)
+	return self.guilds[self.players[name]].members[name]
+end
+
+
 function GuildInfo:get_colored_name_with_tag(player)
 	if player == nil then return end
-	if player.name == nil then
-		local name = player
-		player = self.guilds[self.players[name]].members[name]
-	end
-	local color = self:get_color(player.nation)
-	return(color.."["..self.players[player.name].."] "..player.name..'\127o')
+	if player.name == nil then player = self:get_player(player) end
+	return(self:get_color(player.nation) .. "[" .. self.players[player.name] .. "] " .. player.name .. '\127o')
 end
 
 function GuildInfo:get_colored_name(player)
 	if player == nil then return end
-	if player.name == nil then
-		local name = player
-		player = self.guilds[self.players[name]].members[name]
-	end
-	local color = self:get_color(player.nation)
-	return(color..player.name..'\127o')
+	if player.name == nil then player = self:get_player(player) end
+	return(self:get_color(player.nation) .. player.name .. '\127o')
 end
 
 function GuildInfo:get_color(nation)
