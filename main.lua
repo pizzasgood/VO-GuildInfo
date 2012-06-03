@@ -20,7 +20,7 @@ GuildInfo.players = {}
 GuildInfo.processing = {}
 
 function GuildInfo:is_active()
-	return table.getn2(self.processing) > 0
+	return self.busy or table.getn2(self.processing) > 0
 end
 
 function GuildInfo:ready_check()
@@ -33,6 +33,7 @@ function GuildInfo:ready_check()
 end
 
 function GuildInfo:update_links()
+	self.busy = true
 	print("Fetching main page...")
 	self.main_page = nil
 	HTTP.urlopen(self.guildinfo_url, 'POST', function(success, header, page) 
@@ -46,6 +47,7 @@ function GuildInfo:update_links()
 				print(success)
 				if header ~= nil then print(header.status) end
 			end
+			self.busy = false
 		end, {})
 end
 
