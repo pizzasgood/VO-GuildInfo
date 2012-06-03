@@ -27,6 +27,8 @@ function GuildInfo:ready_check()
 	if self:is_active() then
 		print("Error:  GuildInfo is still processing, please wait for it to finish.")
 		return false
+	else
+		return true
 	end
 end
 
@@ -217,16 +219,16 @@ end
 
 function GuildInfo.proc(_,data)
 	if (data == nil) then
-		if GuildInfo:ready_check() then return end
+		if not GuildInfo:ready_check() then return end
 		GuildInfo:update_links()
 	elseif (data[1] == "l") then
-		if GuildInfo:ready_check() then return end
+		if not GuildInfo:ready_check() then return end
 		GuildInfo:list_guilds()
 	elseif (#data > 1 and data[1] == "g") then
-		if GuildInfo:ready_check() then return end
+		if not GuildInfo:ready_check() then return end
 		GuildInfo:short_guild_info(string.upper(data[2]))
 	elseif (#data > 1 and data[1] == "gg") then
-		if GuildInfo:ready_check() then return end
+		if not GuildInfo:ready_check() then return end
 		GuildInfo:long_guild_info(string.upper(data[2]))
 	else
 		print(titlecolor.."GuildInfo"..'\127o'..color.." "..string.format("%0.1f",GuildInfo.version)..'\127o')
