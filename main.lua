@@ -18,6 +18,7 @@ GuildInfo.charinfo_url = GuildInfo.main_url .. '/x/stats/'
 GuildInfo.guilds = {}
 GuildInfo.players = {}
 GuildInfo.processing = {}
+GuildInfo.rwr_timer = Timer()
 
 function GuildInfo:is_active()
 	return self.busy or table.getn2(self.processing) > 0
@@ -29,6 +30,14 @@ function GuildInfo:ready_check()
 		return false
 	else
 		return true
+	end
+end
+
+function GuildInfo:run_when_ready(callback)
+	if self:is_active() then
+		self.rwr_timer:SetTimeout(100, function() self:run_when_ready(callback) end)
+	else
+		callback()
 	end
 end
 
