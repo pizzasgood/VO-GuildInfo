@@ -177,18 +177,18 @@ function GuildInfo:short_guild_info(tag)
 	if people then
 		for m,r in pairs(people) do
 			if r == "Commander" then
-				print(r..": "..m)
+				print(r..": "..self:get_colored_name(m))
 				break
 			end
 		end
 		for m,r in pairs(people) do
 			if r == "Lieutenant" or r == "Council and Lieutenant" then
-				print(r..": "..m)
+				print(r..": "..self:get_colored_name(m))
 			end
 		end
 		for m,r in pairs(people) do
 			if r == "Council" then
-				print(r..": "..m)
+				print(r..": "..self:get_colored_name(m))
 			end
 		end
 	end
@@ -205,7 +205,7 @@ function GuildInfo:long_guild_info(tag)
 
 	for i,m in pairs(self.guilds[tag].members) do
 		if m.rank == "Member" then
-			print(m.rank..": "..m.name)
+			print(m.rank..": "..self:get_colored_name(m))
 		end
 	end
 end
@@ -218,13 +218,51 @@ function GuildInfo:short_player_info(name)
 	end
 
 	local player = self.guilds[self.players[name]].members[name]
-	print("("..player.rank..") ["..self.players[name].."] "..name)
+	print("("..player.rank..") "..self:get_colored_name_with_tag(player))
 end
 
 
 function GuildInfo:long_player_info(name)
 	print("This is not implemented, falling back to short_player_info")
 	self:short_player_info(name)
+end
+
+function GuildInfo:get_colored_name_with_tag(player)
+	if player == nil then return end
+	if player.name == nil then
+		local name = player
+		player = self.guilds[self.players[name]].members[name]
+	end
+	local color = self:get_color(player.nation)
+	return(color.."["..self.players[player.name].."] "..player.name..'\127o')
+end
+
+function GuildInfo:get_colored_name(player)
+	if player == nil then return end
+	if player.name == nil then
+		local name = player
+		player = self.guilds[self.players[name]].members[name]
+	end
+	local color = self:get_color(player.nation)
+	return(color..player.name..'\127o')
+end
+
+function GuildInfo:get_color(nation)
+	local faction = nation
+	--the website calls UIT people Neutral instead, so fix
+	if nation == 'Neutral' then
+		faction = 'UIT'
+	end
+
+	local factionid = 0
+	for i,v in pairs(FactionName) do
+		if faction == v then
+			factionid = tonumber(i)
+			break
+		end
+	end
+
+	return rgbtohex(FactionColor_RGB[factionid])
 end
 
 
