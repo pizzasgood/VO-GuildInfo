@@ -172,23 +172,23 @@ function GuildInfo:short_guild_info(tag)
 	local name = self.guilds[tag].name
 	local size = self.guilds[tag].num_members
 
-	print(color .. "[" .. tag .. "] " .. name .. '\127o')
+	print(titlecolor .. "[" .. tag .. "] " .. name .. '\127o')
 	print(color .. "Total members: " .. size .. '\127o')
 	if people then
 		for m,r in pairs(people) do
 			if r == "Commander" then
-				print(color .. r .. ": " .. '\127o' .. self:get_colored_name(m))
+				print(subcolor .. r .. ": " .. '\127o' .. self:get_colored_name(m))
 				break
 			end
 		end
 		for m,r in pairs(people) do
 			if r == "Lieutenant" or r == "Council and Lieutenant" then
-				print(color .. r .. ": " .. '\127o' .. self:get_colored_name(m))
+				print(subcolor .. r .. ": " .. '\127o' .. self:get_colored_name(m))
 			end
 		end
 		for m,r in pairs(people) do
 			if r == "Council" then
-				print(color .. r .. ": " .. '\127o' .. self:get_colored_name(m))
+				print(subcolor .. r .. ": " .. '\127o' .. self:get_colored_name(m))
 			end
 		end
 	end
@@ -205,7 +205,7 @@ function GuildInfo:long_guild_info(tag)
 
 	for i,m in pairs(self.guilds[tag].members) do
 		if m.rank == "Member" then
-			print(color .. m.rank .. ": " .. '\127o' .. self:get_colored_name(m))
+			print(subcolor .. m.rank .. ": " .. '\127o' .. self:get_colored_name(m))
 		end
 	end
 end
@@ -218,7 +218,7 @@ function GuildInfo:short_player_info(name)
 	end
 
 	local player = self:get_player(name)
-	print(color .. "(" .. player.rank .. ") " .. '\127o' .. self:get_colored_name_with_tag(player))
+	print(subcolor .. "(" .. player.rank .. ") " .. '\127o' .. self:get_colored_name_with_tag(player))
 end
 
 
@@ -286,7 +286,7 @@ function GuildInfo.proc(_,data)
 		GuildInfo:long_player_info(data[2])
 	else
 		print(titlecolor .. "GuildInfo" .. '\127o' .. color .. " " .. string.format("%0.1f",GuildInfo.version) .. '\127o')
-		print(color .. " Pulls information about guilds from the website." .. '\127o')
+		print(subcolor .. " Pulls information about guilds from the website." .. '\127o')
 	end
 end
 
