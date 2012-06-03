@@ -211,6 +211,23 @@ function GuildInfo:long_guild_info(tag)
 end
 
 
+function GuildInfo:short_player_info(name)
+	if self.players[name] == nil then
+		print("Unknown player "..name)
+		return
+	end
+
+	local player = self.guilds[self.players[name]].members[name]
+	print("("..player.rank..") ["..self.players[name].."] "..name)
+end
+
+
+function GuildInfo:long_player_info(name)
+	print("This is not implemented, falling back to short_player_info")
+	self:short_player_info(name)
+end
+
+
 function GuildInfo.proc(_,data)
 	if (data == nil) then
 		if not GuildInfo:ready_check() then return end
@@ -224,6 +241,12 @@ function GuildInfo.proc(_,data)
 	elseif (#data > 1 and data[1] == "gg") then
 		if not GuildInfo:ready_check() then return end
 		GuildInfo:long_guild_info(string.upper(data[2]))
+	elseif (#data > 1 and data[1] == "p") then
+		if not GuildInfo:ready_check() then return end
+		GuildInfo:short_player_info(data[2])
+	elseif (#data > 1 and data[1] == "pp") then
+		if not GuildInfo:ready_check() then return end
+		GuildInfo:long_player_info(data[2])
 	else
 		print(titlecolor.."GuildInfo"..'\127o'..color.." "..string.format("%0.1f",GuildInfo.version)..'\127o')
 		print(color.." Pulls information about guilds from the website."..'\127o')
